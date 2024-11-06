@@ -21,7 +21,7 @@ class _TitlebarState extends State<Titlebar> {
       color: Colors.black87,
       child: Row(
         children: [
-          MyCustomButton(),
+          SubMenuButton(),
           Expanded(child: Container()),
           IconButton(
               onPressed: () => {

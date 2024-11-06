@@ -105,6 +105,7 @@ class _DesignPageState extends State<DesignPage> {
                       // 工作空间
                       QMenuButton(
                         tooltip: "项目",
+                        isSelected: leftTool == "project",
                         onPressed: () => {
                           setState(() {
                             if (leftTool == "project") {
