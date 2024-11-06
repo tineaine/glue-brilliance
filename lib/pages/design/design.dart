@@ -17,7 +17,6 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:window_manager/window_manager.dart';
 
 import '../../common/button/menuButton.dart';
-import '../home/list.dart';
 import 'views/codeview.dart';
 import 'views/confview.dart';
 
@@ -59,7 +58,7 @@ class _DesignPageState extends State<DesignPage> {
   bool showRightContent = false;
 
   // 当前顶部工具（当前画布工具）
-  // comp（组件）、note（注释/笔记）、link（链接）
+  // cursor（选择）、hand（移动）、link（链接）、comp（组件）、note（注释/笔记）
   String canvasTool = "cursor";
 
   // 当前底部工具
@@ -105,7 +104,7 @@ class _DesignPageState extends State<DesignPage> {
                     children: [
                       // 工作空间
                       QMenuButton(
-                        tooltip: "项目管理",
+                        tooltip: "项目",
                         onPressed: () => {
                           setState(() {
                             if (leftTool == "project") {
@@ -123,7 +122,7 @@ class _DesignPageState extends State<DesignPage> {
                       const SizedBox(height: 10),
                       // 项目
                       QMenuButton(
-                        tooltip: "项目同步",
+                        tooltip: "同步",
                         onPressed: () => {
                           setState(() {
                             if (leftTool == "sync") {
@@ -143,7 +142,7 @@ class _DesignPageState extends State<DesignPage> {
                       // 组件库
                       QMenuButton(
                         iconData: HugeIcons.strokeRoundedStructureFolderCircle,
-                        tooltip: "项目结构",
+                        tooltip: "结构",
                         onPressed: () => {
                           setState(() {
                             if (leftTool == "struct") {
@@ -161,7 +160,7 @@ class _DesignPageState extends State<DesignPage> {
                       // 组件库
                       QMenuButton(
                         iconData: HugeIcons.strokeRoundedNeuralNetwork,
-                        tooltip: "组件仓库",
+                        tooltip: "节点",
                         onPressed: () => {
                           setState(() {
                             if (leftTool == "comp") {
@@ -217,7 +216,7 @@ class _DesignPageState extends State<DesignPage> {
                       // 引擎控制
                       QMenuButton(
                         iconData: HugeIcons.strokeRoundedChip,
-                        tooltip: "引擎控制",
+                        tooltip: "引擎",
                         onPressed: () => {
                           setState(() {
                             if (bottomTool == "engine") {
@@ -234,7 +233,7 @@ class _DesignPageState extends State<DesignPage> {
                       const SizedBox(height: 10),
                       QMenuButton(
                         iconData: HugeIcons.strokeRoundedMessage01,
-                        tooltip: "系统消息",
+                        tooltip: "消息",
                         onPressed: () => {
                           setState(() {
                             if (bottomTool == "message") {
@@ -271,7 +270,7 @@ class _DesignPageState extends State<DesignPage> {
                                 children: [
                                   QMenuButton(
                                     iconData: HugeIcons.strokeRoundedCursor01,
-                                    tooltip: "选择工具(A)",
+                                    tooltip: "选择(Q)",
                                     disabled: currentView != "blueprint",
                                     onPressed: () => {
                                       setState(() {
@@ -283,12 +282,26 @@ class _DesignPageState extends State<DesignPage> {
                                         : Colors.black45,
                                   ),
                                   const SizedBox(width: 10),
+                                  QMenuButton(
+                                    iconData: HugeIcons.strokeRoundedWavingHand01,
+                                    tooltip: "拖动(空格)",
+                                    disabled: currentView != "blueprint",
+                                    onPressed: () => {
+                                      setState(() {
+                                        canvasTool = "hand";
+                                      })
+                                    },
+                                    color: canvasTool == "hand"
+                                        ? Colors.black
+                                        : Colors.black45,
+                                  ),
+                                  const SizedBox(width: 10),
                                   // 组件
                                   QMenuButton(
                                     iconData: HugeIcons
                                         .strokeRoundedDashboardSquareAdd,
                                     disabled: currentView != "blueprint",
-                                    tooltip: "组件工具(C)",
+                                    tooltip: "节点(E)",
                                     onPressed: () => {
                                       setState(() {
                                         canvasTool = "comp";
@@ -303,7 +316,7 @@ class _DesignPageState extends State<DesignPage> {
                                     iconData:
                                         HugeIcons.strokeRoundedStructureAdd,
                                     disabled: currentView != "blueprint",
-                                    tooltip: "链接工具(L)",
+                                    tooltip: "连接(R)",
                                     onPressed: () => {
                                       setState(() {
                                         canvasTool = "link";
@@ -317,7 +330,7 @@ class _DesignPageState extends State<DesignPage> {
                                   QMenuButton(
                                     iconData: HugeIcons.strokeRoundedNoteEdit,
                                     disabled: currentView != "blueprint",
-                                    tooltip: "笔记工具(N)",
+                                    tooltip: "笔记(N)",
                                     onPressed: () => {
                                       setState(() {
                                         canvasTool = "note";
@@ -327,19 +340,17 @@ class _DesignPageState extends State<DesignPage> {
                                         ? Colors.black
                                         : Colors.black45,
                                   ),
-                                  // 分割线
-
                                   const SizedBox(width: 10),
+                                  // 分割线
                                   Container(
                                     width: 1,
                                     height: 20,
                                     decoration: const BoxDecoration(
-                                      border: Border(
-                                        left: BorderSide(
-                                            color: Color.fromARGB(
-                                                255, 220, 220, 220)),
-                                      )
-                                    ),
+                                        border: Border(
+                                      left: BorderSide(
+                                          color: Color.fromARGB(
+                                              255, 220, 220, 220)),
+                                    )),
                                   ),
                                   const SizedBox(width: 10),
                                   QMenuButton(
@@ -375,7 +386,16 @@ class _DesignPageState extends State<DesignPage> {
                                   QMenuButton(
                                     iconData:
                                         HugeIcons.strokeRoundedDownloadSquare02,
-                                    tooltip: "存储修改(Ctrl/Command + S)",
+                                    tooltip: "保存(Ctrl/Command + S)",
+                                    onPressed: () => {
+                                      // TODO：调用画布的存储方法
+                                    },
+                                    color: Colors.black87,
+                                  ),
+                                  const SizedBox(width: 10),
+                                  QMenuButton(
+                                    iconData: HugeIcons.strokeRoundedStartUp02,
+                                    tooltip: "运行(Ctrl/Command + R)",
                                     onPressed: () => {
                                       // TODO：调用画布的存储方法
                                     },
@@ -447,7 +467,7 @@ class _DesignPageState extends State<DesignPage> {
                       children: [
                         QMenuButton(
                           iconData: HugeIcons.strokeRoundedSettings05,
-                          tooltip: "节点属性",
+                          tooltip: "属性(P)",
                           onPressed: () => {
                             setState(() {
                               if (rightTool == "attr") {
@@ -464,7 +484,7 @@ class _DesignPageState extends State<DesignPage> {
                         const SizedBox(height: 10),
                         QMenuButton(
                           iconData: HugeIcons.strokeRoundedCompass01,
-                          tooltip: "蓝图视图",
+                          tooltip: "蓝图(B)",
                           onPressed: () => {
                             setState(() {
                               currentView = "blueprint";
@@ -475,7 +495,7 @@ class _DesignPageState extends State<DesignPage> {
                         const SizedBox(height: 10),
                         QMenuButton(
                           iconData: HugeIcons.strokeRoundedCodeSquare,
-                          tooltip: "配置视图",
+                          tooltip: "轻代码(S)",
                           onPressed: () => {
                             setState(() {
                               currentView = "confview";
@@ -486,7 +506,7 @@ class _DesignPageState extends State<DesignPage> {
                         const SizedBox(height: 10),
                         QMenuButton(
                           iconData: HugeIcons.strokeRoundedCode,
-                          tooltip: "代码视图",
+                          tooltip: "代码(C)",
                           onPressed: () => {
                             setState(() {
                               currentView = "codeview";
@@ -498,7 +518,7 @@ class _DesignPageState extends State<DesignPage> {
                         const SizedBox(height: 10),
                         QMenuButton(
                           iconData: HugeIcons.strokeRoundedAiInnovation02,
-                          tooltip: "AI助手",
+                          tooltip: "AI",
                           onPressed: () => {
                             setState(() {
                               if (rightTool == "ai") {
@@ -516,13 +536,13 @@ class _DesignPageState extends State<DesignPage> {
                         Expanded(child: Container()),
                         QMenuButton(
                           iconData: HugeIcons.strokeRoundedSetting07,
-                          tooltip: "系统设置",
+                          tooltip: "设置",
                           onPressed: () => {},
                         ),
                         const SizedBox(height: 10),
                         QMenuButton(
                           iconData: HugeIcons.strokeRoundedShopSign,
-                          tooltip: "扩展超市",
+                          tooltip: "扩展",
                           onPressed: () async {
                             Uri url = Uri.parse('http://blog.tineaine.cn');
                             await launchUrl(url);
@@ -531,7 +551,7 @@ class _DesignPageState extends State<DesignPage> {
                         const SizedBox(height: 10),
                         QMenuButton(
                           iconData: HugeIcons.strokeRoundedPictureInPictureExit,
-                          tooltip: "返回主页",
+                          tooltip: "退出",
                           onPressed: () => {
                             windowManager.unmaximize(),
                             windowManager.setSize(const Size(800, 600)),

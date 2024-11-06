@@ -1,6 +1,10 @@
-import 'package:flutter/cupertino.dart';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:hugeicons/hugeicons.dart';
+import 'package:window_manager/window_manager.dart';
+
+import 'button/subMenuButton.dart';
 
 class Titlebar extends StatefulWidget {
   const Titlebar({super.key});
@@ -17,19 +21,23 @@ class _TitlebarState extends State<Titlebar> {
       color: Colors.black87,
       child: Row(
         children: [
-          TextButton(
-              onPressed: () => {},
-              child: Text("Glue Brilliance",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 13,
-                    fontFamily: "dingtalk",
-                    color: Color.fromARGB(255, 255, 255, 255),
-                    decoration: TextDecoration.none,
-                  ))),
+          MyCustomButton(),
           Expanded(child: Container()),
           IconButton(
-              onPressed: () => {},
+              onPressed: () => {
+                windowManager.minimize()
+              },
+              tooltip: "最小化",
+              icon: HugeIcon(
+                  icon: HugeIcons.strokeRoundedMinusSign,
+                  size: 13,
+                  color: Colors.white)),
+          IconButton(
+              onPressed: () => {
+                    // 检查是否有未保存的数据
+                    // 结束进程运行
+                    exit(0),
+                  },
               tooltip: "退出蓝图编辑器",
               icon: HugeIcon(
                   icon: HugeIcons.strokeRoundedCancel01,
