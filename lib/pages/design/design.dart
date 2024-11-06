@@ -407,7 +407,7 @@ class _DesignPageState extends State<DesignPage> {
                                     onPressed: () => {
                                       // TODO：调用画布的前进/还原
                                     },
-                                    color: Colors.black54,
+                                    color: Colors.black87,
                                   ),
 
                                   const SizedBox(width: 10),
@@ -418,7 +418,7 @@ class _DesignPageState extends State<DesignPage> {
                                     onPressed: () => {
                                       // TODO：调用画布的回退/撤销
                                     },
-                                    color: Colors.black54,
+                                    color: Colors.black87,
                                   ),
                                   const SizedBox(width: 10),
                                   QMenuButton(
@@ -428,7 +428,7 @@ class _DesignPageState extends State<DesignPage> {
                                     onPressed: () => {
                                       // TODO：调用画布的前进/还原
                                     },
-                                    color: Colors.black54,
+                                    color: Colors.black87,
                                   ),
                                   const SizedBox(width: 10),
                                   QMenuButton(
