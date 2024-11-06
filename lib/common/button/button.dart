@@ -38,6 +38,7 @@ class _QButtonState extends State<QButton> {
           fontSize: 25,
           fontFamily: "dingtalk",
           color: Color.fromARGB(255, 255, 255, 255),
+          decoration: TextDecoration.none,
         ),
       ),
     );

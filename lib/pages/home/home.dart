@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../component/info.dart';
+import 'starter.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});

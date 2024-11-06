@@ -8,8 +8,18 @@ class QMenuButton extends StatefulWidget {
   final IconData iconData;
   final VoidCallback? onPressed;
   final String? tooltip;
+  final Color color;
+  final bool disabled;
+
   // final
-  const QMenuButton({super.key, required this.iconData, this.onPressed, this.tooltip});
+  const QMenuButton(
+      {super.key,
+      required this.iconData,
+      this.onPressed,
+      this.tooltip,
+      this.color = Colors.black54,
+      this.disabled = false});
+
   @override
   State<QMenuButton> createState() => _QMenuButtonState();
 }
@@ -21,15 +31,13 @@ class _QMenuButtonState extends State<QMenuButton> {
       width: 30,
       height: 30,
       child: IconButton(
-        onPressed: widget.onPressed,
+        disabledColor: Colors.black26,
+        onPressed: widget.disabled ? null : widget.onPressed,
         tooltip: widget.tooltip,
-        icon: HugeIcon(
-            icon: widget.iconData,
-            size: 15,
-            color: Colors.black54),
+        icon: HugeIcon(icon: widget.iconData, size: 15, color: widget.color),
         style: ButtonStyle(
-          shape:
-          WidgetStateProperty.all<RoundedRectangleBorder>(
+          shadowColor: WidgetStateProperty.all(Colors.black26),
+          shape: WidgetStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(5),
             ),

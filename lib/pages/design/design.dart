@@ -1,13 +1,25 @@
-import 'package:brilliance/component/canvas.dart';
-import 'package:brilliance/pages/home.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:brilliance/common/canvas/canvas.dart';
+import 'package:brilliance/common/titlebar.dart';
+import 'package:brilliance/pages/design/panel/ai.dart';
+import 'package:brilliance/pages/design/panel/attr.dart';
+import 'package:brilliance/pages/design/panel/bug.dart';
+import 'package:brilliance/pages/design/panel/comp.dart';
+import 'package:brilliance/pages/design/panel/console.dart';
+import 'package:brilliance/pages/design/panel/engine.dart';
+import 'package:brilliance/pages/design/panel/message.dart';
+import 'package:brilliance/pages/design/panel/project.dart';
+import 'package:brilliance/pages/design/panel/struct.dart';
+import 'package:brilliance/pages/design/panel/sync.dart';
+import 'package:brilliance/pages/home/home.dart';
 import 'package:flutter/material.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:window_manager/window_manager.dart';
 
-import '../../component/menuButton.dart';
-import 'CodeView.dart';
+import '../../common/button/menuButton.dart';
+import '../home/list.dart';
+import 'views/codeview.dart';
+import 'views/confview.dart';
 
 class DesignPage extends StatefulWidget {
   const DesignPage({super.key});
@@ -30,6 +42,37 @@ class _DesignPageState extends State<DesignPage> {
   }
 
   bool isCodeview = false;
+  bool isConfview = false;
+
+  String currentView = "blueprint";
+
+  // 显示底部区域
+  bool showBottom = false;
+
+  // 显示顶部区域（默认显示）
+  bool showTop = true;
+
+  // 显示左侧区域
+  bool showLeftContent = false;
+
+  // 显示右侧区域
+  bool showRightContent = false;
+
+  // 当前顶部工具（当前画布工具）
+  // comp（组件）、note（注释/笔记）、link（链接）
+  String canvasTool = "cursor";
+
+  // 当前底部工具
+  // console（控制台）、warning（错误提示）、engine（引擎控制）、message（系统消息）
+  String bottomTool = "none";
+
+  // 当前左测栏工具
+  // project（项目）、sync（同步）、struct（结构）、comp（组件）
+  String leftTool = "none";
+
+  // 当前右侧栏工具
+  // attr(组件属性）、ai(智能助手)
+  String rightTool = "none";
 
   @override
   Widget build(BuildContext context) {
@@ -40,25 +83,7 @@ class _DesignPageState extends State<DesignPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // 标题栏
-          Container(
-            height: 30,
-            color: Colors.black87,
-            child: const Row(
-              children: [
-                SizedBox(
-                  width: 80,
-                ),
-                Text("Glue Brilliance",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 13,
-                      fontFamily: "dingtalk",
-                      color: Color.fromARGB(255, 255, 255, 255),
-                      decoration: TextDecoration.none,
-                    ))
-              ],
-            ),
-          ),
+          Titlebar(),
           // 设计区域
           Expanded(
               child: Container(
@@ -69,7 +94,6 @@ class _DesignPageState extends State<DesignPage> {
               children: [
                 // 左侧边栏
                 Container(
-                  // color: Colors.white,
                   width: 45,
                   padding: const EdgeInsets.all(5),
                   decoration: const BoxDecoration(
@@ -81,54 +105,334 @@ class _DesignPageState extends State<DesignPage> {
                     children: [
                       // 工作空间
                       QMenuButton(
-                        tooltip: "工作空间",
-                        onPressed: () => {},
+                        tooltip: "项目管理",
+                        onPressed: () => {
+                          setState(() {
+                            if (leftTool == "project") {
+                              showLeftContent = !showLeftContent;
+                            } else if (showLeftContent) {
+                              leftTool = "project";
+                            } else {
+                              leftTool = "project";
+                              showLeftContent = !showLeftContent;
+                            }
+                          })
+                        },
                         iconData: HugeIcons.strokeRoundedFolder01,
                       ),
                       const SizedBox(height: 10),
                       // 项目
                       QMenuButton(
-                        tooltip: "项目文件",
-                        onPressed: () => {},
-                        iconData: HugeIcons.strokeRoundedFile02,
+                        tooltip: "项目同步",
+                        onPressed: () => {
+                          setState(() {
+                            if (leftTool == "sync") {
+                              showLeftContent = !showLeftContent;
+                            } else if (showLeftContent) {
+                              leftTool = "sync";
+                            } else {
+                              leftTool = "sync";
+                              showLeftContent = !showLeftContent;
+                            }
+                          })
+                        },
+                        iconData: HugeIcons.strokeRoundedFolderSync,
                       ),
+
                       const SizedBox(height: 10),
-                      // 监视器
+                      // 组件库
                       QMenuButton(
-                        iconData: HugeIcons.strokeRoundedEye,
-                        tooltip: "蓝图监视",
-                        onPressed: () => {},
-                      ),
-                      // 中间空间扩展
-                      Expanded(child: Container()),
-                      // 控制台
-                      QMenuButton(
-                        iconData: HugeIcons.strokeRoundedConsole,
-                        tooltip: "当前问题",
-                        onPressed: () => {},
-                      ),
-                      const SizedBox(height: 10),
-                      // 管理台
-                      QMenuButton(
-                        iconData: HugeIcons.strokeRoundedManager,
-                        tooltip: "管理中心",
-                        onPressed: () => {},
+                        iconData: HugeIcons.strokeRoundedStructureFolderCircle,
+                        tooltip: "项目结构",
+                        onPressed: () => {
+                          setState(() {
+                            if (leftTool == "struct") {
+                              showLeftContent = !showLeftContent;
+                            } else if (showLeftContent) {
+                              leftTool = "struct";
+                            } else {
+                              leftTool = "struct";
+                              showLeftContent = !showLeftContent;
+                            }
+                          })
+                        },
                       ),
                       const SizedBox(height: 10),
                       // 组件库
                       QMenuButton(
-                        iconData: HugeIcons.strokeRoundedGlobe,
+                        iconData: HugeIcons.strokeRoundedNeuralNetwork,
                         tooltip: "组件仓库",
-                        onPressed: () => {},
+                        onPressed: () => {
+                          setState(() {
+                            if (leftTool == "comp") {
+                              showLeftContent = !showLeftContent;
+                            } else if (showLeftContent) {
+                              leftTool = "comp";
+                            } else {
+                              leftTool = "comp";
+                              showLeftContent = !showLeftContent;
+                            }
+                          })
+                        },
+                      ),
+                      // 中间空间扩展
+                      Expanded(child: Container()),
+
+                      // 管理台
+                      QMenuButton(
+                        iconData: HugeIcons.strokeRoundedGreaterThanSquare,
+                        tooltip: "控制台",
+                        onPressed: () => {
+                          setState(() {
+                            if (bottomTool == "console") {
+                              showBottom = !showBottom;
+                            } else if (showBottom) {
+                              bottomTool = "console";
+                            } else {
+                              bottomTool = "console";
+                              showBottom = !showBottom;
+                            }
+                          })
+                        },
+                      ),
+                      const SizedBox(height: 10),
+                      QMenuButton(
+                        iconData: HugeIcons.strokeRoundedBug02,
+                        tooltip: "暂无错误与警告",
+                        // color: const Color.fromARGB(255, 255, 174, 0),
+                        onPressed: () => {
+                          setState(() {
+                            if (bottomTool == "debug") {
+                              showBottom = !showBottom;
+                            } else if (showBottom) {
+                              bottomTool = "debug";
+                            } else {
+                              bottomTool = "debug";
+                              showBottom = !showBottom;
+                            }
+                          })
+                        },
+                      ),
+                      const SizedBox(height: 10),
+                      // 引擎控制
+                      QMenuButton(
+                        iconData: HugeIcons.strokeRoundedChip,
+                        tooltip: "引擎控制",
+                        onPressed: () => {
+                          setState(() {
+                            if (bottomTool == "engine") {
+                              showBottom = !showBottom;
+                            } else if (showBottom) {
+                              bottomTool = "engine";
+                            } else {
+                              bottomTool = "engine";
+                              showBottom = !showBottom;
+                            }
+                          })
+                        },
+                      ),
+                      const SizedBox(height: 10),
+                      QMenuButton(
+                        iconData: HugeIcons.strokeRoundedMessage01,
+                        tooltip: "系统消息",
+                        onPressed: () => {
+                          setState(() {
+                            if (bottomTool == "message") {
+                              showBottom = !showBottom;
+                            } else if (showBottom) {
+                              bottomTool = "message";
+                            } else {
+                              bottomTool = "message";
+                              showBottom = !showBottom;
+                            }
+                          })
+                        },
                       ),
                     ],
                   ),
                 ),
                 // 画布
                 Expanded(
-                    child: Container(
-                  color: const Color.fromARGB(255, 255, 255, 255),
-                  child: !isCodeview ? MainCanvas() : const Codeview(filePath: "./test.json"),
+                    child: Column(
+                  children: [
+                    // 顶部工具/页签区
+                    showTop
+                        ? Container(
+                            height: 40,
+                            decoration: const BoxDecoration(
+                                color: Color.fromARGB(255, 250, 250, 250),
+                                border: Border(
+                                    bottom: BorderSide(
+                                        color: Color.fromARGB(
+                                            255, 239, 239, 239)))),
+                            child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  QMenuButton(
+                                    iconData: HugeIcons.strokeRoundedCursor01,
+                                    tooltip: "选择工具(A)",
+                                    disabled: currentView != "blueprint",
+                                    onPressed: () => {
+                                      setState(() {
+                                        canvasTool = "cursor";
+                                      })
+                                    },
+                                    color: canvasTool == "cursor"
+                                        ? Colors.black
+                                        : Colors.black45,
+                                  ),
+                                  const SizedBox(width: 10),
+                                  // 组件
+                                  QMenuButton(
+                                    iconData: HugeIcons
+                                        .strokeRoundedDashboardSquareAdd,
+                                    disabled: currentView != "blueprint",
+                                    tooltip: "组件工具(C)",
+                                    onPressed: () => {
+                                      setState(() {
+                                        canvasTool = "comp";
+                                      })
+                                    },
+                                    color: canvasTool == "comp"
+                                        ? Colors.black
+                                        : Colors.black45,
+                                  ),
+                                  const SizedBox(width: 10),
+                                  QMenuButton(
+                                    iconData:
+                                        HugeIcons.strokeRoundedStructureAdd,
+                                    disabled: currentView != "blueprint",
+                                    tooltip: "链接工具(L)",
+                                    onPressed: () => {
+                                      setState(() {
+                                        canvasTool = "link";
+                                      })
+                                    },
+                                    color: canvasTool == "link"
+                                        ? Colors.black
+                                        : Colors.black45,
+                                  ),
+                                  const SizedBox(width: 10),
+                                  QMenuButton(
+                                    iconData: HugeIcons.strokeRoundedNoteEdit,
+                                    disabled: currentView != "blueprint",
+                                    tooltip: "笔记工具(N)",
+                                    onPressed: () => {
+                                      setState(() {
+                                        canvasTool = "note";
+                                      })
+                                    },
+                                    color: canvasTool == "note"
+                                        ? Colors.black
+                                        : Colors.black45,
+                                  ),
+                                  // 分割线
+
+                                  const SizedBox(width: 10),
+                                  Container(
+                                    width: 1,
+                                    height: 20,
+                                    decoration: const BoxDecoration(
+                                      border: Border(
+                                        left: BorderSide(
+                                            color: Color.fromARGB(
+                                                255, 220, 220, 220)),
+                                      )
+                                    ),
+                                  ),
+                                  const SizedBox(width: 10),
+                                  QMenuButton(
+                                    iconData: HugeIcons.strokeRoundedRecycle03,
+                                    tooltip: "刷新(F5)",
+                                    onPressed: () => {
+                                      // TODO：调用画布的前进/还原
+                                    },
+                                    color: Colors.black54,
+                                  ),
+
+                                  const SizedBox(width: 10),
+                                  QMenuButton(
+                                    iconData: HugeIcons
+                                        .strokeRoundedArrowTurnBackward,
+                                    tooltip: "回退(Ctrl/Command + Z)",
+                                    onPressed: () => {
+                                      // TODO：调用画布的回退/撤销
+                                    },
+                                    color: Colors.black54,
+                                  ),
+                                  const SizedBox(width: 10),
+                                  QMenuButton(
+                                    iconData:
+                                        HugeIcons.strokeRoundedArrowTurnForward,
+                                    tooltip: "前进(Ctrl/Command + Shift + Z)",
+                                    onPressed: () => {
+                                      // TODO：调用画布的前进/还原
+                                    },
+                                    color: Colors.black54,
+                                  ),
+                                  const SizedBox(width: 10),
+                                  QMenuButton(
+                                    iconData:
+                                        HugeIcons.strokeRoundedDownloadSquare02,
+                                    tooltip: "存储修改(Ctrl/Command + S)",
+                                    onPressed: () => {
+                                      // TODO：调用画布的存储方法
+                                    },
+                                    color: Colors.black87,
+                                  ),
+                                ]),
+                          )
+                        : Container(),
+                    // 中央设计区
+                    Expanded(
+                        // 这个flex应该是允许用户拖动的，后续增加此功能
+                        flex: 7,
+                        child: Container(
+                          color: const Color.fromARGB(255, 250, 250, 250),
+                          child: Row(
+                            children: [
+                              // 左部空间
+                              showLeftContent
+                                  ? Expanded(
+                                      flex: 2,
+                                      child: Container(
+                                        // color: Colors.black54,
+                                        child: getLeftContent(),
+                                      ))
+                                  : Container(),
+                              // 这时设计视图区域
+                              Expanded(
+                                flex: 6,
+                                child: getContent(),
+                              ),
+                              // 右侧空间
+                              showRightContent
+                                  ? Expanded(
+                                      flex: 2,
+                                      child: Container(
+                                        child: getRightContent(),
+                                        // color: Colors.black54
+                                      ))
+                                  : Container(),
+                            ],
+                          ),
+                        )),
+                    // 底部控制区域
+                    showBottom
+                        ? Expanded(
+                            flex: 3,
+                            child: Container(
+                              child: getBottomContent(),
+                              decoration: const BoxDecoration(
+                                  color: Color.fromARGB(255, 250, 250, 250),
+                                  border: Border(
+                                      top: BorderSide(
+                                          color: Color.fromARGB(
+                                              255, 239, 239, 239)))),
+                            ))
+                        : Container()
+                  ],
                 )),
                 // 右侧边栏
                 Container(
@@ -142,19 +446,42 @@ class _DesignPageState extends State<DesignPage> {
                     child: Column(
                       children: [
                         QMenuButton(
-                          iconData: HugeIcons.strokeRoundedShopSign,
-                          tooltip: "扩展超市",
-                          onPressed: () async {
-                            Uri url =
-                                Uri.parse('http://blog.tineaine.cn');
-                            await launchUrl(url);
+                          iconData: HugeIcons.strokeRoundedSettings05,
+                          tooltip: "节点属性",
+                          onPressed: () => {
+                            setState(() {
+                              if (rightTool == "attr") {
+                                showRightContent = !showRightContent;
+                              } else if (showRightContent) {
+                                rightTool = "attr";
+                              } else {
+                                rightTool = "attr";
+                                showRightContent = !showRightContent;
+                              }
+                            })
                           },
                         ),
                         const SizedBox(height: 10),
                         QMenuButton(
-                          iconData: HugeIcons.strokeRoundedSafe,
-                          tooltip: "安全中心",
-                          onPressed: () => {},
+                          iconData: HugeIcons.strokeRoundedCompass01,
+                          tooltip: "蓝图视图",
+                          onPressed: () => {
+                            setState(() {
+                              currentView = "blueprint";
+                              canvasTool = "cursor";
+                            })
+                          },
+                        ),
+                        const SizedBox(height: 10),
+                        QMenuButton(
+                          iconData: HugeIcons.strokeRoundedCodeSquare,
+                          tooltip: "配置视图",
+                          onPressed: () => {
+                            setState(() {
+                              currentView = "confview";
+                              canvasTool = "none";
+                            })
+                          },
                         ),
                         const SizedBox(height: 10),
                         QMenuButton(
@@ -162,7 +489,26 @@ class _DesignPageState extends State<DesignPage> {
                           tooltip: "代码视图",
                           onPressed: () => {
                             setState(() {
-                              isCodeview = !isCodeview;
+                              currentView = "codeview";
+                              canvasTool = "none";
+                            })
+                          },
+                        ),
+
+                        const SizedBox(height: 10),
+                        QMenuButton(
+                          iconData: HugeIcons.strokeRoundedAiInnovation02,
+                          tooltip: "AI助手",
+                          onPressed: () => {
+                            setState(() {
+                              if (rightTool == "ai") {
+                                showRightContent = !showRightContent;
+                              } else if (showRightContent) {
+                                rightTool = "ai";
+                              } else {
+                                rightTool = "ai";
+                                showRightContent = !showRightContent;
+                              }
                             })
                           },
                         ),
@@ -175,9 +521,12 @@ class _DesignPageState extends State<DesignPage> {
                         ),
                         const SizedBox(height: 10),
                         QMenuButton(
-                          iconData: HugeIcons.strokeRoundedMessage01,
-                          tooltip: "系统消息",
-                          onPressed: () => {},
+                          iconData: HugeIcons.strokeRoundedShopSign,
+                          tooltip: "扩展超市",
+                          onPressed: () async {
+                            Uri url = Uri.parse('http://blog.tineaine.cn');
+                            await launchUrl(url);
+                          },
                         ),
                         const SizedBox(height: 10),
                         QMenuButton(
@@ -201,5 +550,63 @@ class _DesignPageState extends State<DesignPage> {
         ],
       ),
     );
+  }
+
+  // 获取内容
+  getContent() {
+    switch (currentView) {
+      case "confview":
+        return Confview();
+      case "codeview":
+        return Codeview(
+          filePath: './test.json',
+        );
+      default:
+        return MainCanvas();
+    }
+  }
+
+  // 获取左侧区域组件
+  getLeftContent() {
+    switch (leftTool) {
+      case "project":
+        return ProjectPanel();
+      case "comp":
+        return CompPanel();
+      case "sync":
+        return SyncPanel();
+      case "struct":
+        return StructPanel();
+      default:
+        return Container();
+    }
+  }
+
+// 获取右侧区域组件
+  getRightContent() {
+    switch (rightTool) {
+      case "attr":
+        return AttrPanel();
+      case "ai":
+        return AiPanel();
+      default:
+        return Container();
+    }
+  }
+
+// 获取底部区域组件
+  getBottomContent() {
+    switch (bottomTool) {
+      case "message":
+        return MessagePanel();
+      case "console":
+        return ConsolePanel();
+      case "debug":
+        return BugPanel();
+      case "engine":
+        return EnginePanel();
+      default:
+        return Container();
+    }
   }
 }
