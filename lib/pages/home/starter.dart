@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:window_manager/window_manager.dart';
 
 import '../design/design.dart';
 import '../../common/button/button.dart';
@@ -12,6 +13,13 @@ class InfoComp extends StatefulWidget {
 }
 
 class _InfoCompState extends State<InfoComp> {
+  @override
+  void initState() {
+    windowManager.setMinimumSize(Size(800, 500));
+    windowManager.setSize(Size(800, 500));
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(

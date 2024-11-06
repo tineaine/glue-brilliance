@@ -14,6 +14,8 @@ class Titlebar extends StatefulWidget {
 }
 
 class _TitlebarState extends State<Titlebar> {
+  bool isMaximized = true;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -24,9 +26,7 @@ class _TitlebarState extends State<Titlebar> {
           SubMenuButton(),
           Expanded(child: Container()),
           IconButton(
-              onPressed: () => {
-                windowManager.minimize()
-              },
+              onPressed: () => {windowManager.minimize()},
               tooltip: "最小化",
               icon: HugeIcon(
                   icon: HugeIcons.strokeRoundedMinusSign,
@@ -34,7 +34,25 @@ class _TitlebarState extends State<Titlebar> {
                   color: Colors.white)),
           IconButton(
               onPressed: () => {
-                    // 检查是否有未保存的数据
+                    if (isMaximized)
+                      {
+                        windowManager.unmaximize(),
+                        isMaximized = false,
+                      }
+                    else
+                      {
+                        windowManager.maximize(),
+                        isMaximized = true,
+                      }
+                  },
+              tooltip: "窗口化",
+              icon: HugeIcon(
+                  icon: HugeIcons.strokeRoundedSquare,
+                  size: 13,
+                  color: Colors.white)),
+          IconButton(
+              onPressed: () => {
+                    // TODO: 检查是否有未保存的数据
                     // 结束进程运行
                     exit(0),
                   },

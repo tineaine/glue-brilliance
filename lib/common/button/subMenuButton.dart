@@ -87,7 +87,7 @@ class _SubMenuButtonState extends State<SubMenuButton> {
             size: 13,
             color: Colors.black54),
         title:
-            Text(item, style: TextStyle(fontSize: 13, color: Colors.black54)),
+            Text(item, style: TextStyle(fontSize: 13,fontFamily: "dingtalk", color: Colors.black54)),
         onTap: () {
           _hideMenu();
           // 处理选项的点击事件

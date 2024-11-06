@@ -31,7 +31,7 @@ class _DesignPageState extends State<DesignPage> {
   @override
   void initState() {
     windowManager.maximize();
-    windowManager.setMinimumSize(const Size(1000, 600));
+    windowManager.setMinimumSize(const Size(800, 500));
     super.initState();
   }
 
@@ -39,9 +39,6 @@ class _DesignPageState extends State<DesignPage> {
   void dispose() {
     super.dispose();
   }
-
-  bool isCodeview = false;
-  bool isConfview = false;
 
   String currentView = "blueprint";
 
@@ -254,13 +251,62 @@ class _DesignPageState extends State<DesignPage> {
                 // 画布
                 Expanded(
                     child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    // 顶部工具/页签区
-                    showTop
-                        ? Container(
+                    Expanded(
+                      child: Stack(
+                        alignment: Alignment.topCenter,
+                        children: [
+                          // 画布
+                          Container(
+                            color: const Color.fromARGB(255, 250, 250, 250),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                // 左部空间
+                                showLeftContent
+                                    ? Expanded(
+                                        flex: 2,
+                                        child: Container(
+                                          child: getLeftContent(),
+                                        ))
+                                    : Container(),
+                                // 这时设计视图区域
+                                Expanded(
+                                  flex: 6,
+                                  child: getContent(),
+                                ),
+                                // 右侧空间
+                                showRightContent
+                                    ? Expanded(
+                                        flex: 2,
+                                        child: Container(
+                                          child: getRightContent(),
+                                          // color: Colors.black54
+                                        ))
+                                    : Container(),
+                              ],
+                            ),
+                          ),
+                          // 顶部工具
+                          Container(
                             height: 40,
+                            width: 500,
+                            margin: const EdgeInsets.only(top: 15),
                             decoration: const BoxDecoration(
-                                color: Color.fromARGB(255, 250, 250, 250),
+                                color: Color.fromARGB(150, 225, 225, 225),
+                                boxShadow: [
+                                  // BoxShadow(
+                                  //         color: Color.fromARGB(
+                                  //             255, 239, 239, 239),
+                                  //         blurRadius: 5,
+                                  //         spreadRadius: 1,
+                                  //         offset: Offset(0, 1))
+                                ],
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(8)),
                                 border: Border(
                                     bottom: BorderSide(
                                         color: Color.fromARGB(
@@ -284,7 +330,8 @@ class _DesignPageState extends State<DesignPage> {
                                   ),
                                   const SizedBox(width: 10),
                                   QMenuButton(
-                                    iconData: HugeIcons.strokeRoundedWavingHand01,
+                                    iconData:
+                                        HugeIcons.strokeRoundedWavingHand01,
                                     tooltip: "拖动(空格)",
                                     disabled: currentView != "blueprint",
                                     onPressed: () => {
@@ -404,41 +451,9 @@ class _DesignPageState extends State<DesignPage> {
                                   ),
                                 ]),
                           )
-                        : Container(),
-                    // 中央设计区
-                    Expanded(
-                        // 这个flex应该是允许用户拖动的，后续增加此功能
-                        flex: 7,
-                        child: Container(
-                          color: const Color.fromARGB(255, 250, 250, 250),
-                          child: Row(
-                            children: [
-                              // 左部空间
-                              showLeftContent
-                                  ? Expanded(
-                                      flex: 2,
-                                      child: Container(
-                                        // color: Colors.black54,
-                                        child: getLeftContent(),
-                                      ))
-                                  : Container(),
-                              // 这时设计视图区域
-                              Expanded(
-                                flex: 6,
-                                child: getContent(),
-                              ),
-                              // 右侧空间
-                              showRightContent
-                                  ? Expanded(
-                                      flex: 2,
-                                      child: Container(
-                                        child: getRightContent(),
-                                        // color: Colors.black54
-                                      ))
-                                  : Container(),
-                            ],
-                          ),
-                        )),
+                        ],
+                      ),
+                    ),
                     // 底部控制区域
                     showBottom
                         ? Expanded(

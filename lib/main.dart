@@ -33,9 +33,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Configurator',
+      title: 'Brilliance',
       // 关掉debug的横幅
       debugShowCheckedModeBanner: false,
+      debugShowMaterialGrid: false,
       theme: ThemeData(),
       home: Scaffold(
         backgroundColor: const Color.fromARGB(255, 255, 255, 255),
