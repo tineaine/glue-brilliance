@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
+import '../../../common/panel.dart';
+
 class StructPanel extends StatefulWidget {
   const StructPanel({super.key});
 
@@ -10,6 +12,7 @@ class StructPanel extends StatefulWidget {
 class _StructPanelState extends State<StructPanel> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return CommonPanel(name: "结构",border: "right",);
+
   }
 }

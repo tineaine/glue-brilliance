@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
+import '../../../common/panel.dart';
+
 class AiPanel extends StatefulWidget {
   const AiPanel({super.key});
 
@@ -10,6 +12,7 @@ class AiPanel extends StatefulWidget {
 class _ProjectPanelState extends State<AiPanel> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return CommonPanel(name: "智能",);
+
   }
 }

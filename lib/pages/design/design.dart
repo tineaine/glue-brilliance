@@ -11,7 +11,7 @@ import 'package:brilliance/pages/design/panel/message.dart';
 import 'package:brilliance/pages/design/panel/project.dart';
 import 'package:brilliance/pages/design/panel/struct.dart';
 import 'package:brilliance/pages/design/panel/sync.dart';
-import 'package:brilliance/pages/design/views/mindview.dart';
+import 'package:brilliance/pages/design/views/blueprint_view.dart';
 import 'package:brilliance/pages/home/home.dart';
 import 'package:flutter/material.dart';
 import 'package:hugeicons/hugeicons.dart';
@@ -20,8 +20,8 @@ import 'package:window_manager/window_manager.dart';
 
 import '../../common/button/menu_button.dart';
 import '../../event/event.dart';
-import 'views/codeview.dart';
-import 'views/confview.dart';
+import 'views/code_view.dart';
+import 'views/light_view.dart';
 
 class DesignPage extends StatefulWidget {
   const DesignPage({super.key});
@@ -83,8 +83,8 @@ class _DesignPageState extends State<DesignPage> {
   // attr(组件属性）、ai(智能助手)
   String rightTool = "none";
 
-  GlobalKey<MindviewState> blueprintViewKey = GlobalKey<MindviewState>();
-  GlobalKey<ConfviewState> confViewKey = GlobalKey<ConfviewState>();
+  GlobalKey<BlueprintViewState> blueprintViewKey = GlobalKey<BlueprintViewState>();
+  GlobalKey<LightViewState> confViewKey = GlobalKey<LightViewState>();
   GlobalKey<CodeviewState> codeViewKey = GlobalKey<CodeviewState>();
 
   @override
@@ -352,13 +352,13 @@ class _DesignPageState extends State<DesignPage> {
   getContent() {
     switch (currentView) {
       case "confview":
-        return Confview();
+        return LightView();
       case "codeview":
         return Codeview(
           filePath: currentBlueprintPath,
         );
       default:
-        return MainCanvas();
+        return BlueprintView();
     }
   }
 
@@ -511,7 +511,7 @@ class _DesignPageState extends State<DesignPage> {
           iconData: HugeIcons.strokeRoundedSetting07,
           onPressed: () => {}),
       MenuIconButtonStatus(
-        name: "扩展",
+        name: "市场",
         key: "extension",
         iconData: HugeIcons.strokeRoundedShopSign,
         onPressed: () async {

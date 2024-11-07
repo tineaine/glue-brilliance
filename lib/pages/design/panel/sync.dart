@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
+import '../../../common/panel.dart';
+
 class SyncPanel extends StatefulWidget {
   const SyncPanel({super.key});
 
@@ -10,6 +12,7 @@ class SyncPanel extends StatefulWidget {
 class _SyncPanelState extends State<SyncPanel> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return CommonPanel(name: "版本",border: "right",);
+
   }
 }

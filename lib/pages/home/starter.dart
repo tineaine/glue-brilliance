@@ -27,12 +27,12 @@ class _InfoCompState extends State<InfoComp> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           // Logo 图片
-          const Image(image: AssetImage('assets/images/app_icon_256.png'), width: 200, height: 200,),
+          const Image(image: AssetImage('assets/images/app_icon_256.png'), width: 150, height: 150,),
           const SizedBox(height: 15),
           const Text(
             "Glue Brilliance",
             style: TextStyle(
-              fontSize: 35,
+              fontSize: 30,
               fontFamily: "dingtalk",
               color: Color.fromARGB(255, 23, 23, 23),
               decoration: TextDecoration.none,

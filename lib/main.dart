@@ -1,5 +1,4 @@
 import 'package:brilliance/pages/home/home.dart';
-import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:window_manager/window_manager.dart';
@@ -41,7 +40,7 @@ class MyApp extends StatelessWidget {
       debugShowMaterialGrid: false,
       theme: ThemeData(),
       home: Scaffold(
-        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+        backgroundColor: Colors.transparent,
         body: HomePage(),
       ),
     );

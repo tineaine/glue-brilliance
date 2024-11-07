@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class ConsolePanel extends StatefulWidget {
   const ConsolePanel({super.key});
@@ -10,6 +11,14 @@ class ConsolePanel extends StatefulWidget {
 class _ConsolePanelState extends State<ConsolePanel> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Container(
+      padding: EdgeInsets.all(20),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.black87,
+          borderRadius: BorderRadius.circular(8),
+        ),
+      ),
+    );
   }
 }
