@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:window_manager/window_manager.dart';
 
-import 'button/subMenuButton.dart';
+import 'button/sub_menu_button.dart';
 
 class Titlebar extends StatefulWidget {
   const Titlebar({super.key});

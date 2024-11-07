@@ -7,6 +7,7 @@ class SubMenuButton extends StatefulWidget {
 
 
   @override
+  // ignore: library_private_types_in_public_api
   _SubMenuButtonState createState() => _SubMenuButtonState();
 }
 
@@ -47,7 +48,7 @@ class _SubMenuButtonState extends State<SubMenuButton> {
       ),
     );
 
-    Overlay.of(context)?.insert(_overlayEntry!);
+    Overlay.of(context).insert(_overlayEntry!);
     _isMenuOpen = true;
   }
 

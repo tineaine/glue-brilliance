@@ -1,4 +1,5 @@
 import 'package:brilliance/pages/home/home.dart';
+import 'package:event_bus/event_bus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:window_manager/window_manager.dart';
@@ -20,6 +21,7 @@ void main() async {
     await windowManager.focus();
   });
 
+  
   runApp(
     const ProviderScope(
       child: MyApp(),

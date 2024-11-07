@@ -68,7 +68,6 @@ class _MainCanvasState extends State<MainCanvas> {
   }
 
   void _showContextMenu(BuildContext context, Offset position) {
-    print("object");
     showMenu(
         context: context,
         position: RelativeRect.fromLTRB(
@@ -86,11 +85,11 @@ class _MainCanvasState extends State<MainCanvas> {
   Widget build(BuildContext context) {
     return GestureDetector(
         onDoubleTap: () {
-          print("-");
+          // print("-");
         },
         onSecondaryTapDown: (details)
     {
-      print("object");
+      // print("object");
       _showContextMenu(context, details.globalPosition);
     },
     child: Stack(

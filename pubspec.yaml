@@ -22,8 +22,9 @@ dependencies:
   flutter_code_editor: ^0.3.2
   flutter_highlight: ^0.7.0
   json5: ^0.8.2
-  path_provider: ^2.1.4
+  path_provider: ^2.1.5
   highlight: ^0.7.0
+  event_bus: ^2.0.1
 
 
 dev_dependencies:

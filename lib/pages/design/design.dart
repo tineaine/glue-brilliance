@@ -1,5 +1,6 @@
 import 'package:brilliance/common/canvas/canvas.dart';
-import 'package:brilliance/common/titlebar.dart';
+import 'package:brilliance/common/title_bar.dart';
+import 'package:brilliance/event/design.dart';
 import 'package:brilliance/pages/design/panel/ai.dart';
 import 'package:brilliance/pages/design/panel/attr.dart';
 import 'package:brilliance/pages/design/panel/bug.dart';
@@ -10,13 +11,15 @@ import 'package:brilliance/pages/design/panel/message.dart';
 import 'package:brilliance/pages/design/panel/project.dart';
 import 'package:brilliance/pages/design/panel/struct.dart';
 import 'package:brilliance/pages/design/panel/sync.dart';
+import 'package:brilliance/pages/design/views/mindview.dart';
 import 'package:brilliance/pages/home/home.dart';
 import 'package:flutter/material.dart';
 import 'package:hugeicons/hugeicons.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:window_manager/window_manager.dart';
 
-import '../../common/button/menuButton.dart';
+import '../../common/button/menu_button.dart';
+import '../../event/event.dart';
 import 'views/codeview.dart';
 import 'views/confview.dart';
 
@@ -28,6 +31,16 @@ class DesignPage extends StatefulWidget {
 }
 
 class _DesignPageState extends State<DesignPage> {
+  // 突出颜色
+  Color subColor = const Color.fromARGB(255, 0, 127, 255);
+
+  // 禁用颜色
+  Color disableColor = const Color.fromARGB(255, 150, 150, 150);
+
+  String currentProjectPath = "project1";
+
+  String currentBlueprintPath = "./test.json";
+
   @override
   void initState() {
     windowManager.maximize();
@@ -70,6 +83,10 @@ class _DesignPageState extends State<DesignPage> {
   // attr(组件属性）、ai(智能助手)
   String rightTool = "none";
 
+  GlobalKey<MindviewState> blueprintViewKey = GlobalKey<MindviewState>();
+  GlobalKey<ConfviewState> confViewKey = GlobalKey<ConfviewState>();
+  GlobalKey<CodeviewState> codeViewKey = GlobalKey<CodeviewState>();
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -98,154 +115,7 @@ class _DesignPageState extends State<DesignPage> {
                           right: BorderSide(
                               color: Color.fromARGB(255, 239, 239, 239)))),
                   child: Column(
-                    children: [
-                      // 工作空间
-                      QMenuButton(
-                        tooltip: "项目",
-                        isSelected: leftTool == "project",
-                        onPressed: () => {
-                          setState(() {
-                            if (leftTool == "project") {
-                              showLeftContent = !showLeftContent;
-                            } else if (showLeftContent) {
-                              leftTool = "project";
-                            } else {
-                              leftTool = "project";
-                              showLeftContent = !showLeftContent;
-                            }
-                          })
-                        },
-                        iconData: HugeIcons.strokeRoundedFolder01,
-                      ),
-                      const SizedBox(height: 10),
-                      // 项目
-                      QMenuButton(
-                        tooltip: "同步",
-                        onPressed: () => {
-                          setState(() {
-                            if (leftTool == "sync") {
-                              showLeftContent = !showLeftContent;
-                            } else if (showLeftContent) {
-                              leftTool = "sync";
-                            } else {
-                              leftTool = "sync";
-                              showLeftContent = !showLeftContent;
-                            }
-                          })
-                        },
-                        iconData: HugeIcons.strokeRoundedFolderSync,
-                      ),
-
-                      const SizedBox(height: 10),
-                      // 组件库
-                      QMenuButton(
-                        iconData: HugeIcons.strokeRoundedStructureFolderCircle,
-                        tooltip: "结构",
-                        onPressed: () => {
-                          setState(() {
-                            if (leftTool == "struct") {
-                              showLeftContent = !showLeftContent;
-                            } else if (showLeftContent) {
-                              leftTool = "struct";
-                            } else {
-                              leftTool = "struct";
-                              showLeftContent = !showLeftContent;
-                            }
-                          })
-                        },
-                      ),
-                      const SizedBox(height: 10),
-                      // 组件库
-                      QMenuButton(
-                        iconData: HugeIcons.strokeRoundedNeuralNetwork,
-                        tooltip: "节点",
-                        onPressed: () => {
-                          setState(() {
-                            if (leftTool == "comp") {
-                              showLeftContent = !showLeftContent;
-                            } else if (showLeftContent) {
-                              leftTool = "comp";
-                            } else {
-                              leftTool = "comp";
-                              showLeftContent = !showLeftContent;
-                            }
-                          })
-                        },
-                      ),
-                      // 中间空间扩展
-                      Expanded(child: Container()),
-
-                      // 管理台
-                      QMenuButton(
-                        iconData: HugeIcons.strokeRoundedGreaterThanSquare,
-                        tooltip: "控制台",
-                        onPressed: () => {
-                          setState(() {
-                            if (bottomTool == "console") {
-                              showBottom = !showBottom;
-                            } else if (showBottom) {
-                              bottomTool = "console";
-                            } else {
-                              bottomTool = "console";
-                              showBottom = !showBottom;
-                            }
-                          })
-                        },
-                      ),
-                      const SizedBox(height: 10),
-                      QMenuButton(
-                        iconData: HugeIcons.strokeRoundedBug02,
-                        tooltip: "暂无错误与警告",
-                        // color: const Color.fromARGB(255, 255, 174, 0),
-                        onPressed: () => {
-                          setState(() {
-                            if (bottomTool == "debug") {
-                              showBottom = !showBottom;
-                            } else if (showBottom) {
-                              bottomTool = "debug";
-                            } else {
-                              bottomTool = "debug";
-                              showBottom = !showBottom;
-                            }
-                          })
-                        },
-                      ),
-                      const SizedBox(height: 10),
-                      // 引擎控制
-                      QMenuButton(
-                        iconData: HugeIcons.strokeRoundedChip,
-                        tooltip: "引擎",
-                        onPressed: () => {
-                          setState(() {
-                            if (bottomTool == "engine") {
-                              showBottom = !showBottom;
-                            } else if (showBottom) {
-                              bottomTool = "engine";
-                            } else {
-                              bottomTool = "engine";
-                              showBottom = !showBottom;
-                            }
-                          })
-                        },
-                      ),
-                      const SizedBox(height: 10),
-                      QMenuButton(
-                        iconData: HugeIcons.strokeRoundedMessage01,
-                        tooltip: "消息",
-                        onPressed: () => {
-                          setState(() {
-                            if (bottomTool == "message") {
-                              showBottom = !showBottom;
-                            } else if (showBottom) {
-                              bottomTool = "message";
-                            } else {
-                              bottomTool = "message";
-                              showBottom = !showBottom;
-                            }
-                          })
-                        },
-                      ),
-                    ],
+                    children: makeMenu("l"),
                   ),
                 ),
                 // 画布
@@ -255,6 +125,7 @@ class _DesignPageState extends State<DesignPage> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Expanded(
+                      flex: 7,
                       child: Stack(
                         alignment: Alignment.topCenter,
                         children: [
@@ -282,35 +153,21 @@ class _DesignPageState extends State<DesignPage> {
                                 showRightContent
                                     ? Expanded(
                                         flex: 2,
-                                        child: Container(
-                                          child: getRightContent(),
-                                          // color: Colors.black54
-                                        ))
+                                        child:
+                                            Container(child: getRightContent()))
                                     : Container(),
                               ],
                             ),
                           ),
-                          // 顶部工具
                           Container(
                             height: 40,
                             width: 500,
                             margin: const EdgeInsets.only(top: 15),
                             decoration: const BoxDecoration(
-                                color: Color.fromARGB(150, 225, 225, 225),
-                                boxShadow: [
-                                  // BoxShadow(
-                                  //         color: Color.fromARGB(
-                                  //             255, 239, 239, 239),
-                                  //         blurRadius: 5,
-                                  //         spreadRadius: 1,
-                                  //         offset: Offset(0, 1))
-                                ],
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(8)),
-                                border: Border(
-                                    bottom: BorderSide(
-                                        color: Color.fromARGB(
-                                            255, 239, 239, 239)))),
+                              color: Color.fromARGB(180, 225, 225, 225),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10)),
+                            ),
                             child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -325,8 +182,8 @@ class _DesignPageState extends State<DesignPage> {
                                       })
                                     },
                                     color: canvasTool == "cursor"
-                                        ? Colors.black
-                                        : Colors.black45,
+                                        ? subColor
+                                        : Colors.black,
                                   ),
                                   const SizedBox(width: 10),
                                   QMenuButton(
@@ -340,8 +197,8 @@ class _DesignPageState extends State<DesignPage> {
                                       })
                                     },
                                     color: canvasTool == "hand"
-                                        ? Colors.black
-                                        : Colors.black45,
+                                        ? subColor
+                                        : Colors.black,
                                   ),
                                   const SizedBox(width: 10),
                                   // 组件
@@ -356,8 +213,8 @@ class _DesignPageState extends State<DesignPage> {
                                       })
                                     },
                                     color: canvasTool == "comp"
-                                        ? Colors.black
-                                        : Colors.black45,
+                                        ? subColor
+                                        : Colors.black,
                                   ),
                                   const SizedBox(width: 10),
                                   QMenuButton(
@@ -371,8 +228,8 @@ class _DesignPageState extends State<DesignPage> {
                                       })
                                     },
                                     color: canvasTool == "link"
-                                        ? Colors.black
-                                        : Colors.black45,
+                                        ? subColor
+                                        : Colors.black,
                                   ),
                                   const SizedBox(width: 10),
                                   QMenuButton(
@@ -385,8 +242,8 @@ class _DesignPageState extends State<DesignPage> {
                                       })
                                     },
                                     color: canvasTool == "note"
-                                        ? Colors.black
-                                        : Colors.black45,
+                                        ? subColor
+                                        : Colors.black,
                                   ),
                                   const SizedBox(width: 10),
                                   // 分割线
@@ -405,7 +262,7 @@ class _DesignPageState extends State<DesignPage> {
                                     iconData: HugeIcons.strokeRoundedRecycle03,
                                     tooltip: "刷新(F5)",
                                     onPressed: () => {
-                                      // TODO：调用画布的前进/还原
+                                      eventBus.fire(RefreshEvent(currentView)),
                                     },
                                     color: Colors.black87,
                                   ),
@@ -416,7 +273,7 @@ class _DesignPageState extends State<DesignPage> {
                                         .strokeRoundedArrowTurnBackward,
                                     tooltip: "回退(Ctrl/Command + Z)",
                                     onPressed: () => {
-                                      // TODO：调用画布的回退/撤销
+                                      eventBus.fire(UndoEvent(currentView)),
                                     },
                                     color: Colors.black87,
                                   ),
@@ -426,7 +283,7 @@ class _DesignPageState extends State<DesignPage> {
                                         HugeIcons.strokeRoundedArrowTurnForward,
                                     tooltip: "前进(Ctrl/Command + Shift + Z)",
                                     onPressed: () => {
-                                      // TODO：调用画布的前进/还原
+                                      eventBus.fire(RedoEvent(currentView)),
                                     },
                                     color: Colors.black87,
                                   ),
@@ -436,7 +293,7 @@ class _DesignPageState extends State<DesignPage> {
                                         HugeIcons.strokeRoundedDownloadSquare02,
                                     tooltip: "保存(Ctrl/Command + S)",
                                     onPressed: () => {
-                                      // TODO：调用画布的存储方法
+                                      eventBus.fire(SaveEvent(currentView)),
                                     },
                                     color: Colors.black87,
                                   ),
@@ -445,12 +302,13 @@ class _DesignPageState extends State<DesignPage> {
                                     iconData: HugeIcons.strokeRoundedStartUp02,
                                     tooltip: "运行(Ctrl/Command + R)",
                                     onPressed: () => {
-                                      // TODO：调用画布的存储方法
+                                      eventBus.fire(RunEvent()),
                                     },
                                     color: Colors.black87,
                                   ),
                                 ]),
                           )
+                          // 顶部工具
                         ],
                       ),
                     ),
@@ -480,105 +338,7 @@ class _DesignPageState extends State<DesignPage> {
                     width: 45,
                     padding: const EdgeInsets.all(5),
                     child: Column(
-                      children: [
-                        QMenuButton(
-                          iconData: HugeIcons.strokeRoundedSettings05,
-                          tooltip: "属性(P)",
-                          onPressed: () => {
-                            setState(() {
-                              if (rightTool == "attr") {
-                                showRightContent = !showRightContent;
-                              } else if (showRightContent) {
-                                rightTool = "attr";
-                              } else {
-                                rightTool = "attr";
-                                showRightContent = !showRightContent;
-                              }
-                            })
-                          },
-                        ),
-                        const SizedBox(height: 10),
-                        QMenuButton(
-                          iconData: HugeIcons.strokeRoundedCompass01,
-                          tooltip: "蓝图(B)",
-                          onPressed: () => {
-                            setState(() {
-                              currentView = "blueprint";
-                              canvasTool = "cursor";
-                            })
-                          },
-                        ),
-                        const SizedBox(height: 10),
-                        QMenuButton(
-                          iconData: HugeIcons.strokeRoundedCodeSquare,
-                          tooltip: "轻代码(S)",
-                          onPressed: () => {
-                            setState(() {
-                              currentView = "confview";
-                              canvasTool = "none";
-                            })
-                          },
-                        ),
-                        const SizedBox(height: 10),
-                        QMenuButton(
-                          iconData: HugeIcons.strokeRoundedCode,
-                          tooltip: "代码(C)",
-                          onPressed: () => {
-                            setState(() {
-                              currentView = "codeview";
-                              canvasTool = "none";
-                            })
-                          },
-                        ),
-
-                        const SizedBox(height: 10),
-                        QMenuButton(
-                          iconData: HugeIcons.strokeRoundedAiInnovation02,
-                          tooltip: "AI",
-                          onPressed: () => {
-                            setState(() {
-                              if (rightTool == "ai") {
-                                showRightContent = !showRightContent;
-                              } else if (showRightContent) {
-                                rightTool = "ai";
-                              } else {
-                                rightTool = "ai";
-                                showRightContent = !showRightContent;
-                              }
-                            })
-                          },
-                        ),
-                        // 中间空间扩展
-                        Expanded(child: Container()),
-                        QMenuButton(
-                          iconData: HugeIcons.strokeRoundedSetting07,
-                          tooltip: "设置",
-                          onPressed: () => {},
-                        ),
-                        const SizedBox(height: 10),
-                        QMenuButton(
-                          iconData: HugeIcons.strokeRoundedShopSign,
-                          tooltip: "扩展",
-                          onPressed: () async {
-                            Uri url = Uri.parse('http://blog.tineaine.cn');
-                            await launchUrl(url);
-                          },
-                        ),
-                        const SizedBox(height: 10),
-                        QMenuButton(
-                          iconData: HugeIcons.strokeRoundedPictureInPictureExit,
-                          tooltip: "退出",
-                          onPressed: () => {
-                            windowManager.unmaximize(),
-                            windowManager.setSize(const Size(800, 600)),
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const HomePage()),
-                            )
-                          },
-                        ),
-                      ],
+                      children: makeMenu("r"),
                     ))
               ],
             ),
@@ -595,7 +355,7 @@ class _DesignPageState extends State<DesignPage> {
         return Confview();
       case "codeview":
         return Codeview(
-          filePath: './test.json',
+          filePath: currentBlueprintPath,
         );
       default:
         return MainCanvas();
@@ -645,4 +405,242 @@ class _DesignPageState extends State<DesignPage> {
         return Container();
     }
   }
+
+  makeMenu(String makefor) {
+    List<MenuIconButtonStatus> ltnames = [
+      MenuIconButtonStatus(
+          name: "项目",
+          key: "project",
+          iconData: HugeIcons.strokeRoundedFolder01,
+          onPressed: () => {}),
+      MenuIconButtonStatus(
+          name: "同步",
+          key: "sync",
+          iconData: HugeIcons.strokeRoundedFolderSync,
+          onPressed: () => {}),
+      MenuIconButtonStatus(
+          name: "组件",
+          key: "comp",
+          iconData: HugeIcons.strokeRoundedNeuralNetwork,
+          onPressed: () => {}),
+      MenuIconButtonStatus(
+          name: "结构",
+          key: "struct",
+          iconData: HugeIcons.strokeRoundedStructureFolderCircle,
+          onPressed: () => {}),
+      // 扩展，如果key为"expanded"
+      MenuIconButtonStatus(
+          name: "",
+          key: "expanded",
+          iconData: HugeIcons.strokeRoundedStructureFolderCircle,
+          onPressed: () => {}),
+
+      MenuIconButtonStatus(
+          name: "控制台",
+          key: "console",
+          iconData: HugeIcons.strokeRoundedGreaterThanSquare,
+          onPressed: () => {}),
+      MenuIconButtonStatus(
+          name: "问题",
+          key: "debug",
+          iconData: HugeIcons.strokeRoundedBug02,
+          onPressed: () => {}),
+      MenuIconButtonStatus(
+          name: "引擎",
+          key: "engine",
+          iconData: HugeIcons.strokeRoundedChip,
+          onPressed: () => {}),
+      MenuIconButtonStatus(
+          name: "消息",
+          key: "message",
+          iconData: HugeIcons.strokeRoundedMessage01,
+          onPressed: () => {}),
+    ];
+    List<MenuIconButtonStatus> rtnames = [
+      MenuIconButtonStatus(
+          name: "属性",
+          key: "attr",
+          iconData: HugeIcons.strokeRoundedSettings05,
+          onPressed: () => {}),
+      MenuIconButtonStatus(
+          name: "蓝图",
+          key: "blueprint",
+          iconData: HugeIcons.strokeRoundedCompass01,
+          onPressed: () => {
+                setState(() {
+                  currentView = "blueprint";
+                  canvasTool = "cursor";
+                })
+              }),
+      MenuIconButtonStatus(
+          name: "轻码",
+          key: "confview",
+          iconData: HugeIcons.strokeRoundedCodeSquare,
+          onPressed: () => {
+                setState(() {
+                  currentView = "confview";
+                  canvasTool = "none";
+                })
+              }),
+      MenuIconButtonStatus(
+          name: "代码",
+          key: "codeview",
+          iconData: HugeIcons.strokeRoundedCode,
+          onPressed: () => {
+                setState(() {
+                  currentView = "codeview";
+                  canvasTool = "none";
+                })
+              }),
+      MenuIconButtonStatus(
+          name: "AI",
+          key: "ai",
+          iconData: HugeIcons.strokeRoundedAiInnovation02,
+          onPressed: () => {}),
+
+      // 扩展，如果key为"expanded"
+      MenuIconButtonStatus(
+          name: "",
+          key: "expanded",
+          iconData: HugeIcons.strokeRoundedStructureFolderCircle,
+          onPressed: () => {}),
+
+      MenuIconButtonStatus(
+          name: "设置",
+          key: "setting",
+          iconData: HugeIcons.strokeRoundedSetting07,
+          onPressed: () => {}),
+      MenuIconButtonStatus(
+        name: "扩展",
+        key: "extension",
+        iconData: HugeIcons.strokeRoundedShopSign,
+        onPressed: () async {
+          Uri url = Uri.parse('http://blog.tineaine.cn');
+          await launchUrl(url);
+        },
+      ),
+      MenuIconButtonStatus(
+          name: "退出",
+          key: "exit",
+          iconData: HugeIcons.strokeRoundedPictureInPictureExit,
+          onPressed: () => {
+                windowManager.unmaximize(),
+                windowManager.setSize(const Size(800, 600)),
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const HomePage()),
+                )
+              }),
+    ];
+    List<Widget> menu = [];
+
+    switch (makefor) {
+      case "l":
+        for (MenuIconButtonStatus button in ltnames) {
+          if (button.key == "expanded") {
+            menu.add(Expanded(child: Container()));
+          } else {
+            menu.add(QMenuButton(
+              tooltip: button.name,
+              isSelected: getIsSelect(button.key),
+              selectedColor: subColor,
+              onPressed: () => {
+                setState(() {
+                  changeStatus(button.key);
+                  button.onPressed();
+                })
+              },
+              iconData: button.iconData,
+            ));
+            // 底部间隔
+            menu.add(SizedBox(height: 10));
+          }
+        }
+        break;
+      case "r":
+        for (MenuIconButtonStatus button in rtnames) {
+          if (button.key == "expanded") {
+            menu.add(Expanded(child: Container()));
+          } else {
+            menu.add(QMenuButton(
+              tooltip: button.name,
+              isSelected: getIsSelect(button.key),
+              selectedColor: subColor,
+              onPressed: () => {
+                setState(() {
+                  changeStatus(button.key);
+                  button.onPressed();
+                })
+              },
+              iconData: button.iconData,
+            ));
+            // 底部间隔
+            menu.add(SizedBox(height: 10));
+          }
+        }
+        break;
+    }
+
+    return menu;
+  }
+
+  bool getIsSelect(String key) {
+    if ((showLeftContent && leftTool == key) ||
+        (rightTool == key && showRightContent) ||
+        (bottomTool == key && showBottom) ||
+        (currentView == key)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  changeStatus(String name) {
+    List<String> lnames = ["project", "comp", "sync", "struct"];
+    List<String> bnames = ["console", "debug", "engine", "message"];
+    List<String> rnames = ["attr", "ai"];
+
+    if (lnames.contains(name)) {
+      if (leftTool == name) {
+        showLeftContent = !showLeftContent;
+      } else if (showLeftContent) {
+        leftTool = name;
+      } else {
+        leftTool = name;
+        showLeftContent = !showLeftContent;
+      }
+    } else if (rnames.contains(name)) {
+      if (rightTool == name) {
+        showRightContent = !showRightContent;
+      } else if (showRightContent) {
+        rightTool = name;
+      } else {
+        rightTool = name;
+        showRightContent = !showRightContent;
+      }
+    } else if (bnames.contains(name)) {
+      if (bottomTool == name) {
+        showBottom = !showBottom;
+      } else if (showBottom) {
+        bottomTool = name;
+      } else {
+        bottomTool = name;
+        showBottom = !showBottom;
+      }
+    }
+  }
+}
+
+class MenuIconButtonStatus {
+  String name;
+  String key;
+  IconData iconData;
+  VoidCallback onPressed;
+
+  MenuIconButtonStatus({
+    required this.name,
+    required this.key,
+    required this.iconData,
+    required this.onPressed,
+  });
 }
