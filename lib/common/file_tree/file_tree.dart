@@ -58,6 +58,10 @@ class _ProjectTreeState extends State<ProjectTree> {
     CustomNode(name: 'Simx MySQL', type: 'ref', path: "/Users/eyresimpson/Downloads/bbb.json"),
     CustomNode(name: 'Simx Redis', type: 'ref', path: "/Users/eyresimpson/Downloads/bbb.json"),
   ];
+  List<CustomNode> confNode = [
+    CustomNode(name: '项目配置', type: 'conf', path: "/Users/eyresimpson/Downloads/bbb.json"),
+    CustomNode(name: 'Http配置', type: 'conf', path: "/Users/eyresimpson/Downloads/bbb.json"),
+  ];
 
   @override
   void initState() {
@@ -93,10 +97,11 @@ class _ProjectTreeState extends State<ProjectTree> {
   Widget build(BuildContext context) {
     return ListView(
       children: [
-        _buildTopLevelTile('接口', 'api'),
-        _buildTopLevelTile('配置', 'api'),
         _buildTopLevelTile('蓝图', 'blueprint'),
+        _buildTopLevelTile('接口', 'api'),
         _buildTopLevelTile('触发', 'trigger'),
+        _buildTopLevelTile('资源', 'trigger'),
+        _buildTopLevelTile('配置', 'api'),
         _buildTopLevelTile('引用', 'ref'),
       ],
     );
