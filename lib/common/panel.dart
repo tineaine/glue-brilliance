@@ -66,8 +66,16 @@ class _CommonPanelState extends State<CommonPanel> {
                   ),
                   Spacer(),
                   QMenuButton(
+                      iconData: HugeIcons.strokeRoundedAddCircle,
+                      tooltip: "添加",
+                      onPressed: () => {}),
+                  QMenuButton(
+                      iconData: HugeIcons.strokeRoundedRefresh,
+                      tooltip: "刷新",
+                      onPressed: () => {}),
+                  QMenuButton(
                       iconData: HugeIcons.strokeRoundedMoreVertical,
-                      tooltip: "更多配置",
+                      tooltip: "更多",
                       onPressed: () => {})
                 ],
               ),

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:hugeicons/hugeicons.dart';
 
+import '../../../common/canvas/canvas.dart';
 import '../../../event/design.dart';
 import '../../../event/event.dart';
 
@@ -11,6 +13,8 @@ class BlueprintView extends StatefulWidget {
 }
 
 class BlueprintViewState extends State<BlueprintView> {
+  String path = "";
+
   @override
   void initState() {
     super.initState();
@@ -34,6 +38,20 @@ class BlueprintViewState extends State<BlueprintView> {
       if (event.types == 'blueprint' && mounted) {
         refresh();
       }
+    });
+
+    eventBus.on<OpenEvent>().listen((event) {
+      if (event.types == 'blueprint' && mounted) {
+        open(event);
+      }
+    });
+  }
+
+
+
+  open(OpenEvent event) {
+    setState(() {
+      path = event.path;
     });
   }
 
@@ -107,33 +125,34 @@ class BlueprintViewState extends State<BlueprintView> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
         backgroundColor: Colors.white,
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                'Brilliance Blueprint',
-                style: TextStyle(
-                    fontSize: 30,
-                    color: Colors.black,
-                    fontFamily: 'dingtalk',
-                    decoration: TextDecoration.none),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Text(
-                  '未打开任何文件，在右侧项目中打开第一个蓝图吧！',
-                  style: TextStyle(
-                      fontSize: 12,
-                    fontFamily: 'dingtalk',
-                    color: Colors.black54,
-                  ))
-            ],
-          ),
-        ));
+        body: path == ""
+            ? Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Brilliance Blueprint',
+                      style: TextStyle(
+                          fontSize: 30,
+                          color: Colors.black,
+                          fontFamily: 'dingtalk',
+                          decoration: TextDecoration.none),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Text('未打开任何文件，在右侧项目中打开第一个蓝图吧！',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontFamily: 'dingtalk',
+                          color: Colors.black54,
+                        ))
+                  ],
+                ),
+              )
+            : MainCanvas());
   }
 }

@@ -1,4 +1,3 @@
-import 'package:brilliance/common/canvas/canvas.dart';
 import 'package:brilliance/common/title_bar.dart';
 import 'package:brilliance/event/design.dart';
 import 'package:brilliance/pages/design/panel/ai.dart';
@@ -39,7 +38,7 @@ class _DesignPageState extends State<DesignPage> {
 
   String currentProjectPath = "project1";
 
-  String currentBlueprintPath = "./test.json";
+  // String currentBlueprintPath = "./test.json";
 
   @override
   void initState() {
@@ -83,7 +82,8 @@ class _DesignPageState extends State<DesignPage> {
   // attr(组件属性）、ai(智能助手)
   String rightTool = "none";
 
-  GlobalKey<BlueprintViewState> blueprintViewKey = GlobalKey<BlueprintViewState>();
+  GlobalKey<BlueprintViewState> blueprintViewKey =
+      GlobalKey<BlueprintViewState>();
   GlobalKey<LightViewState> confViewKey = GlobalKey<LightViewState>();
   GlobalKey<CodeviewState> codeViewKey = GlobalKey<CodeviewState>();
 
@@ -354,9 +354,7 @@ class _DesignPageState extends State<DesignPage> {
       case "confview":
         return LightView();
       case "codeview":
-        return Codeview(
-          filePath: currentBlueprintPath,
-        );
+        return Codeview();
       default:
         return BlueprintView();
     }

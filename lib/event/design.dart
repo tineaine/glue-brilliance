@@ -6,6 +6,16 @@ class SaveEvent {
   final String types;
 }
 
+// 打开事件
+class OpenEvent {
+  OpenEvent(this.types, this.path);
+
+  // 要打开的文件路径
+  final String path;
+  // 这个打开操作要交给哪个视图
+  final String types;
+}
+
 // 撤销事件
 class UndoEvent {
   UndoEvent(this.types);

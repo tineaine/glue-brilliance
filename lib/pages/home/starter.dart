@@ -25,30 +25,31 @@ class _InfoCompState extends State<InfoComp> {
       color: Colors.white,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           // Logo 图片
-          const Image(image: AssetImage('assets/images/app_icon_256.png'), width: 150, height: 150,),
-          const SizedBox(height: 15),
+          // const Image(image: AssetImage('assets/images/app_icon_256.png'), width: 150, height: 150,),
+          const SizedBox(height: 30),
           const Text(
-            "Glue Brilliance",
+            "Glue Brilliance IDE",
             style: TextStyle(
               fontSize: 30,
               fontFamily: "dingtalk",
-              color: Color.fromARGB(255, 23, 23, 23),
+              color: Color.fromARGB(255, 0, 0, 0),
               decoration: TextDecoration.none,
             ),
           ),
-          const SizedBox(height: 15),
+          const SizedBox(height: 25),
           const Text(
-            'Glue Open Platform Business Design Toolkit',
+            'Glue Open Platform Business Develop And Design IDE',
             style: TextStyle(
               fontSize: 16,
               fontFamily: "dingtalk",
-              color: Color.fromARGB(255, 100, 100, 100),
+              color: Color.fromARGB(100, 100, 100, 100),
               decoration: TextDecoration.none,
             ),
           ),
-          const SizedBox(height: 15),
+          const SizedBox(height: 30),
           QButton(
             text: 'Create',
             size: const Size(400, 60),
@@ -62,13 +63,22 @@ class _InfoCompState extends State<InfoComp> {
             },
           ),
           const SizedBox(height: 15),
-          const Text(
-            '已有工作空间？点击此处打开',
-            style: TextStyle(
-              fontSize: 15,
-              fontFamily: "dingtalk",
-              color: Color.fromARGB(255, 89, 89, 89),
-              decoration: TextDecoration.none,
+          TextButton(
+            onPressed: () => {
+              // 导航到工作空间创建页面
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => DesignPage()),
+              )
+            },
+            child: Text(
+              '已有工作空间？点击此处打开',
+              style: TextStyle(
+                fontSize: 15,
+                fontFamily: "dingtalk",
+                color: Color.fromARGB(255, 89, 89, 89),
+                decoration: TextDecoration.none,
+              ),
             ),
           ),
         ],
